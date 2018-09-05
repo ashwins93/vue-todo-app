@@ -1,7 +1,7 @@
 <template>
   <div>
     <ul>
-      <li v-for="todo in todos" v-bind:key="todo.id">
+      <li v-for="todo in todos" v-bind:class="{ complete: todo.completed }" v-bind:key="todo.id" v-on:click="toggleTodo(todo.id)">
         {{ todo.text }}
         <span class="delete-button" v-on:click="deleteTodo(todo.id)">&times;</span>
       </li>
@@ -16,15 +16,15 @@ export default {
   data: function() {
     return {
       todos: [
-        { id: 0, text: 'Learn JavaScript' },
-        { id: 1, text: 'Learn Vue' },
-        { id: 2, text: 'Build something awesome' },
+        { id: 0, text: 'Learn JavaScript', completed: false },
+        { id: 1, text: 'Learn Vue', completed: false },
+        { id: 2, text: 'Build something awesome', completed: false },
       ],
       input: ''
     };
   },
   methods: {
-    addTodo: function(event) {
+    addTodo: function() {
       this.todos.push({
         id: Date.now(),
         text: this.input
@@ -33,6 +33,10 @@ export default {
     },
     deleteTodo: function(id) {
       this.todos.splice(this.todos.findIndex(todo => todo.id ===  id), 1);
+    },
+    toggleTodo: function(id) {
+      const todo = this.todos.find(todo => todo.id === id);
+      todo.completed = !todo.completed;
     }
   }
 };
@@ -51,6 +55,10 @@ li {
   border-top: 1px solid #eee;
   cursor: pointer;
   position: relative;
+}
+li.complete {
+  text-decoration: line-through;
+  opacity: 0.8;
 }
 .delete-button {
   position: absolute;
